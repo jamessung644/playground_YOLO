@@ -1,5 +1,4 @@
 opencv-python
-opencv-python-headless
 streamlit-webrtc
 matplotlib
 numpy
