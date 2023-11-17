@@ -1,4 +1,3 @@
-pip install streamlit
-pip install opencv-python
-pip install numpy
-pip install pillow
+opencv-python
+numpy
+pillow
