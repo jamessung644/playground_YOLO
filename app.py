@@ -1,32 +1,40 @@
 import streamlit as st
-import cv2
-import numpy as np
-from PIL import Image
-from time import sleep
+import streamlit.components.v1 as components
 
 # 스트림릿 페이지 설정
-st.set_page_config(
-    page_icon="🐶",
-    page_title="웹캠 실시간 송출",
-    layout="wide",
-)
+st.set_page_config(page_title="웹캠 실시간 스트리밍")
 
-# 웹캠에서 영상을 캡처하는 함수
-def capture_video():
-    stframe = st.empty()
-    cap = cv2.VideoCapture(0)  # 0은 기본 웹캠을 의미합니다.
+# HTML/JavaScript 코드를 사용하여 웹캠 접근 및 표시
+html_string = """
+<html>
+<body>
 
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            continue
+<!-- 비디오 태그를 사용하여 웹캠 스트림을 표시 -->
+<video id="video" width="640" height="480" autoplay></video>
+<button id="startButton">웹캠 시작</button>
 
-        # OpenCV로 캡처된 이미지를 PIL 형식으로 변환
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(frame)
+<script>
+// 비디오 및 버튼 요소에 접근
+var video = document.getElementById('video');
+var startButton = document.getElementById('startButton');
 
-        # 스트림릿에 영상을 표시
-        stframe.image(img, use_column_width=True)
+// 시작 버튼 이벤트 리스너
+startButton.onclick = function() {
+  // 브라우저의 웹캠 접근 요청
+  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    .then(function(stream) {
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(function(err) {
+      console.log("An error occurred: " + err);
+    });
+}
+</script>
 
-# 웹캠 캡처 함수 실행
-capture_video()
+</body>
+</html>
+"""
+
+# Streamlit에 HTML/JavaScript 코드 삽입
+components.html(html_string, height=600)
